@@ -47,12 +47,12 @@ export const TopBar = ({ onToggleMobileMenu }) => {
   }, []);
 
   return (
-    <header className="h-16 bg-white border-b border-[#E2E8F0] px-4 md:px-6 flex items-center justify-between gap-4 sticky top-0 z-20 shadow-2xs">
+    <header className="h-16 bg-white border-b border-[#E2E8F0] px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-3 sticky top-0 z-20 shadow-2xs overflow-hidden">
       {/* Mobile Menu Button + Search Input Trigger */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <button
           onClick={onToggleMobileMenu}
-          className="md:hidden p-2 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9]"
+          className="md:hidden p-2 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] cursor-pointer"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -60,53 +60,53 @@ export const TopBar = ({ onToggleMobileMenu }) => {
         {/* Global Search Input Trigger */}
         <button
           onClick={() => setIsSearchOpen(true)}
-          className="hidden sm:flex items-center gap-3 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl px-3.5 py-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-all min-w-[260px] md:min-w-[320px]"
+          className="hidden sm:flex items-center gap-2.5 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-all w-48 md:w-60 lg:w-72 cursor-pointer"
         >
-          <Search className="w-4 h-4 text-[#0F766E]" />
-          <span className="flex-1 text-left font-sans">Search routes, shipments, incidents...</span>
-          <kbd className="font-mono text-[10px] bg-white text-[#64748B] border border-[#CBD5E1] px-1.5 py-0.5 rounded shadow-2xs">
+          <Search className="w-3.5 h-3.5 text-[#0F766E] flex-shrink-0" />
+          <span className="flex-1 text-left font-sans truncate">Search routes, shipments...</span>
+          <kbd className="font-mono text-[9px] bg-white text-[#64748B] border border-[#CBD5E1] px-1.5 py-0.5 rounded shadow-2xs flex-shrink-0">
             Ctrl K
           </kbd>
         </button>
       </div>
 
       {/* Center Operational Status & Emergency Mode Button */}
-      <div className="hidden md:flex items-center gap-3">
-        {/* Emergency Operations Toggle Button (Section 10) */}
+      <div className="hidden md:flex items-center gap-2 flex-1 min-w-0 justify-center">
+        {/* Emergency Operations Toggle Button */}
         <button
           onClick={() => setIsEmergencyMode(!isEmergencyMode)}
-          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all border ${
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border flex-shrink-0 cursor-pointer ${
             isEmergencyMode
               ? 'bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5] shadow-xs'
               : 'bg-[#F8FAFC] text-[#0F172A] border-[#E2E8F0] hover:bg-[#F1F5F9]'
           }`}
           title="Toggle Emergency Command Directive Matrix"
         >
-          <Zap className={`w-4 h-4 ${isEmergencyMode ? 'text-[#DC2626] animate-bounce' : 'text-[#D97706]'}`} />
-          <span>{isEmergencyMode ? 'EMERGENCY MODE ACTIVE' : 'Emergency Operations'}</span>
+          <Zap className={`w-3.5 h-3.5 ${isEmergencyMode ? 'text-[#DC2626] animate-bounce' : 'text-[#D97706]'}`} />
+          <span className="truncate">{isEmergencyMode ? 'EMERGENCY MODE ACTIVE' : 'Emergency Ops'}</span>
         </button>
 
         {activeEmergencyAlert.active && (
           <button
             onClick={() => setIsEmergencyModalOpen(true)}
-            className="flex items-center gap-2 bg-[#FEF2F2] hover:bg-[#FEE2E2] border border-[#FECACA] hover:border-[#FCA5A5] px-3.5 py-1.5 rounded-full text-xs text-[#991B1B] max-w-sm truncate font-medium transition-all shadow-2xs hover:shadow-xs group cursor-pointer"
+            className="flex items-center gap-1.5 bg-[#FEF2F2] hover:bg-[#FEE2E2] border border-[#FECACA] hover:border-[#FCA5A5] px-3 py-1.5 rounded-full text-xs text-[#991B1B] truncate font-medium transition-all shadow-2xs hover:shadow-xs group cursor-pointer max-w-xs xl:max-w-md min-w-0"
             title="Click to inspect emergency details and trigger AI rerouting"
           >
             <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626] flex-shrink-0 group-hover:scale-110 transition-transform" />
             <span className="truncate">{activeEmergencyAlert.message}</span>
-            <span className="text-[10px] font-bold bg-[#DC2626] text-white px-2 py-0.5 rounded-full ml-1 shrink-0">
+            <span className="text-[9px] font-bold bg-[#DC2626] text-white px-2 py-0.2 rounded-full ml-1 shrink-0">
               INSPECT &rarr;
             </span>
           </button>
         )}
       </div>
 
-      {/* Right Actions */}
-      <div className="flex items-center gap-3">
+      {/* Right Actions - Never Shrink or Overflow */}
+      <div className="flex items-center gap-1.5 sm:gap-2.5 flex-shrink-0">
         <NetworkIndicator />
 
         {/* System Live Clock */}
-        <div className="hidden lg:flex items-center gap-1.5 bg-[#F8FAFC] border border-[#E2E8F0] px-3 py-1.5 rounded-xl text-xs font-mono text-[#0F766E] font-bold">
+        <div className="hidden xl:flex items-center gap-1 bg-[#F8FAFC] border border-[#E2E8F0] px-2.5 py-1.5 rounded-xl text-xs font-mono text-[#0F766E] font-bold">
           <Clock className="w-3.5 h-3.5 text-[#64748B]" />
           <span>{timeString || '12:00:00 IST'}</span>
         </div>
@@ -122,7 +122,7 @@ export const TopBar = ({ onToggleMobileMenu }) => {
         {/* Notification Bell */}
         <button
           onClick={() => setIsNotificationOpen(!isNotificationOpen)}
-          className="relative p-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] hover:border-[#0F766E] transition-colors"
+          className="relative p-2 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] text-[#64748B] hover:text-[#0F172A] hover:border-[#0F766E] transition-colors cursor-pointer"
           title="Command Center Alerts"
         >
           <Bell className="w-4 h-4" />
