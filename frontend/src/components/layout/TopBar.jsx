@@ -47,7 +47,7 @@ export const TopBar = ({ onToggleMobileMenu }) => {
   }, []);
 
   return (
-    <header className="h-16 bg-white border-b border-[#E2E8F0] px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-3 sticky top-0 z-20 shadow-2xs overflow-hidden">
+    <header className="h-16 bg-white border-b border-[#E2E8F0] px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-3 sticky top-0 z-40 shadow-2xs">
       {/* Mobile Menu Button + Search Input Trigger */}
       <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <button
