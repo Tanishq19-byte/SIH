@@ -1,6 +1,9 @@
 {
   "buildCommand": "cd frontend && npm install && npm run build",
   "outputDirectory": "frontend/dist",
+  "env": {
+    "VITE_BUILD_STAMP": "v1.1.0-20260823T1334"
+  },
   "rewrites": [
     {
       "source": "/(.*)",
