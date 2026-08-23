@@ -30,35 +30,37 @@ export const Sidebar = () => {
 
   return (
     <aside
-      className={`relative bg-white border-r border-[#E2E8F0] flex flex-col justify-between transition-all duration-200 z-30 select-none shadow-xs ${
-        collapsed ? 'w-20' : 'w-64'
+      className={`relative bg-white border-r border-[#E2E8F0] flex flex-col justify-between transition-all duration-300 z-30 select-none shadow-xs ${
+        collapsed ? 'w-16' : 'w-64'
       }`}
     >
       {/* Top Section */}
       <div>
         {/* Brand Header */}
-        <div className="h-16 px-4 border-b border-[#E2E8F0] flex items-center justify-between bg-white">
-          <div className="flex items-center gap-3 overflow-hidden">
+        <div className="h-16 px-3 border-b border-[#E2E8F0] flex items-center justify-between bg-white relative">
+          <div className="flex items-center gap-2.5 overflow-hidden">
             <div className="w-9 h-9 rounded-xl bg-[#0F766E] p-0.5 flex-shrink-0 flex items-center justify-center shadow-xs">
               <Shield className="w-5 h-5 text-white" />
             </div>
 
             {!collapsed && (
-              <div className="truncate">
+              <div className="truncate min-w-0">
                 <h2 className="text-sm font-extrabold tracking-tight text-[#0F172A] flex items-center gap-1.5">
                   NER SmartRoute <span className="text-[10px] text-[#0F766E] px-1.5 py-0.2 bg-[#CCFBF1] rounded font-bold">AI</span>
                 </h2>
-                <p className="text-[10px] text-[#64748B] truncate">Logistics Intelligence Platform</p>
+                <p className="text-[10px] text-[#64748B] truncate">Logistics Intelligence</p>
               </div>
             )}
           </div>
 
           <button
             onClick={() => setCollapsed(!collapsed)}
-            className="p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-colors"
-            title={collapsed ? 'Expand Navigation' : 'Collapse Navigation'}
+            className={`p-1.5 rounded-lg text-[#64748B] hover:text-[#0F172A] hover:bg-[#F1F5F9] transition-all cursor-pointer ${
+              collapsed ? 'absolute -right-3.5 top-5 bg-white border border-[#CBD5E1] shadow-xs hover:scale-110 z-40 rounded-full w-7 h-7 flex items-center justify-center p-0' : ''
+            }`}
+            title={collapsed ? 'Expand Navigation Sidebar' : 'Collapse Navigation Sidebar'}
           >
-            {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
+            {collapsed ? <ChevronRight className="w-4 h-4 text-[#0F766E]" /> : <ChevronLeft className="w-4 h-4" />}
           </button>
         </div>
 
