@@ -1,7 +1,8 @@
 import { evaluateCorridorRisk, MODEL_METADATA } from './riskEngine.js';
 import { sanitizePredictionInput } from '../utils/inputSanitizer.js';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+// Uses Vercel Serverless API (relative URL — works in prod AND dev via Vite proxy)
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
 const EXPRESS_API_URL = `${API_BASE_URL}/api/v1/ai/predict-disruption`;
 const EXPRESS_HEALTH_URL = `${API_BASE_URL}/api/v1/ai/health`;
 

@@ -1,0 +1,45 @@
+﻿function cors(res) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+}
+function ok(res, data, message, status = 200) {
+  res.status(status).json({ success: true, statusCode: status, message, data, timestamp: new Date().toISOString() });
+}
+
+// In-memory store (resets per cold start — fine for demo)
+let vehiclesData = [
+  { id: 'V-NER-8891', regNumber: 'AS-01-GC-9921', driverName: 'Biren Gogoi', driverPhone: '+91 98640 11234', agency: 'Assam State Oxygen Mission / IOCL', cargoCategory: 'Medicines', cargoDescription: 'Cryogenic Liquid Medical Oxygen (22,000 Liters)', origin: 'Guwahati Oxygen Hub', destination: 'Silchar Medical College & Hospital', status: 'route_interrupted', speedKmh: 0, fuelLevelPct: 62, delayHours: 11.5 },
+  { id: 'V-NER-4412', regNumber: 'ML-05-E-4412', driverName: 'Sangma Marak', driverPhone: '+91 94361 88219', agency: 'Food Corporation of India (FCI)', cargoCategory: 'Food', cargoDescription: 'Fortified Rice & Wheat Manifest', origin: 'FCI Depot Changsari, Assam', destination: 'Shillong Central Civil Supplies Warehouse', status: 'on_duty', speedKmh: 48, fuelLevelPct: 84, delayHours: 0.75 },
+  { id: 'V-NER-3091', regNumber: 'SK-01-B-3091', driverName: 'Tashi Bhutia', driverPhone: '+91 94340 55567', agency: 'Sikkim Health Dept / Cold Chain Logistics', cargoCategory: 'Medicines', cargoDescription: '1,850 Cold Chain Vaccine Kits', origin: 'Siliguri Depot', destination: 'STNM Hospital Gangtok', status: 'delayed', speedKmh: 22, fuelLevelPct: 71, delayHours: 4.5 },
+  { id: 'V-NER-7721', regNumber: 'AR-01-D-7721', driverName: 'Nabam Tuki', driverPhone: '+91 94360 99812', agency: 'ONGC / NRL Petroleum Division', cargoCategory: 'Fuel', cargoDescription: 'Aviation Turbine Fuel (ATF) 35,000L', origin: 'NRL Numaligarh Refinery', destination: 'Donyi Polo Airport, Itanagar', status: 'on_duty', speedKmh: 55, fuelLevelPct: 100, delayHours: 0 }
+];
+
+module.exports = function handler(req, res) {
+  cors(res);
+  if (req.method === 'OPTIONS') return res.status(200).end();
+
+  if (req.method === 'GET') {
+    const { status, category } = req.query;
+    let result = [...vehiclesData];
+    if (status) result = result.filter(v => v.status === status);
+    if (category) result = result.filter(v => v.cargoCategory === category);
+    return ok(res, result, `Fetched ${result.length} logistics vehicles`);
+  }
+
+  if (req.method === 'POST') {
+    const { regNumber, driverName, agency, cargoCategory, cargoDescription, origin, destination } = req.body || {};
+    if (!regNumber) return res.status(400).json({ success: false, message: 'regNumber is required' });
+    const newVehicle = {
+      id: `V-NER-${Math.floor(1000 + Math.random() * 9000)}`,
+      regNumber, driverName, agency, cargoCategory, cargoDescription, origin, destination,
+      driverPhone: req.body.driverPhone || '+91 98000 00000',
+      status: 'on_duty', speedKmh: 45, fuelLevelPct: 100, delayHours: 0,
+      createdAt: new Date().toISOString()
+    };
+    vehiclesData.unshift(newVehicle);
+    return ok(res, newVehicle, `Created vehicle ${regNumber}`, 201);
+  }
+
+  return res.status(405).json({ success: false, message: 'Method not allowed' });
+};
