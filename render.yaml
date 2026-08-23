@@ -10,8 +10,9 @@ services:
     envVars:
       - key: PORT
         value: 10000
+      # Allow requests from the Express backend and the Vercel frontend
       - key: CORS_ORIGIN
-        value: "*"
+        value: "https://sih-chi-one.vercel.app,http://localhost:5000,http://localhost:3000,http://localhost:5173"
 
   # 2. Node.js Express API Gateway Backend
   - type: web
@@ -23,15 +24,22 @@ services:
     healthCheckPath: /health
     envVars:
       - key: PORT
-        value: 5000
+        value: 10000
       - key: NODE_ENV
         value: production
+      # AI Service URL — automatically resolved from the Render AI service host
       - key: AI_SERVICE_URL
         fromService:
           type: web
           name: ner-smartroute-ai
           property: host
+      # Allow the production Vercel frontend and local dev origins
       - key: CORS_ORIGIN
-        value: "*"
+        value: "https://sih-chi-one.vercel.app,http://localhost:5173,http://localhost:3000"
       - key: JWT_SECRET
         generateValue: true
+      # Set these in the Render dashboard — do NOT hardcode real values here
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_KEY
+        sync: false
