@@ -46,7 +46,7 @@ export const Sidebar = () => {
             {!collapsed && (
               <div className="truncate min-w-0">
                 <h2 className="text-sm font-extrabold tracking-tight text-[#0F172A] flex items-center gap-1.5">
-                  NER SmartRoute <span className="text-[10px] text-[#0F766E] px-1.5 py-0.2 bg-[#CCFBF1] rounded font-bold">AI</span>
+                  Disha <span className="text-[10px] text-[#0F766E] px-1.5 py-0.2 bg-[#CCFBF1] rounded font-bold">AI</span>
                 </h2>
                 <p className="text-[10px] text-[#64748B] truncate">Logistics Intelligence</p>
               </div>

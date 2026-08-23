@@ -231,7 +231,7 @@ export const PredictionsPage = () => {
   return (
     <div className="space-y-6 font-sans text-[#0F172A]">
       <PageHeader
-        category="SMARTROUTE INTELLIGENCE & PREDICTIVE MATRIX"
+        category="DISHA INTELLIGENCE & PREDICTIVE MATRIX"
         title={`AI Risk Insights: ${stateName}`}
         subtitle={`Real-time AI disruption forecast, delay estimations, and recommended bypass directives for ${stateName} corridors.`}
         badgeText={`${riskCategory} RISK • ${stateName.toUpperCase()}`}
@@ -467,7 +467,7 @@ export const PredictionsPage = () => {
         <div className="p-5 rounded-2xl bg-white border border-[#E2E8F0] space-y-4 shadow-2xs">
           <div className="flex items-center justify-between border-b border-[#E2E8F0] pb-3">
             <span className="text-xs font-extrabold text-[#0F766E] uppercase flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#0F766E]" /> 2. SMARTROUTE BYPASS INTELLIGENCE
+              <Sparkles className="w-4 h-4 text-[#0F766E]" /> 2. DISHA BYPASS INTELLIGENCE
             </span>
             <span className="px-3 py-0.5 rounded-full text-[10px] bg-[#CCFBF1] text-[#0F766E] font-bold border border-[#99F6E4]">
               AI CONFIDENCE: {riskScore >= 70 ? '94%' : '88%'}

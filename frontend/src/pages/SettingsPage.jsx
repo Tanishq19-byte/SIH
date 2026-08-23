@@ -20,7 +20,7 @@ export const SettingsPage = () => {
     <div className="space-y-6 font-sans text-[#172033]">
       <PageHeader
         category="Platform Administration"
-        title="NER-SmartRoute AI Command Settings"
+        title="Disha AI Command Settings"
         subtitle="Manage regional alert thresholds, agency integrations (NHIDCL, BRO, NDMA), API keys, and notification triggers."
       />
 
