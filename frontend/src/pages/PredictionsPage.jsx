@@ -126,6 +126,46 @@ export const PredictionsPage = () => {
   const [isAiAutoSync, setIsAiAutoSync] = useState(true);
   const [activePreset, setActivePreset] = useState('state_live');
 
+  // Environmental Tuner State initialized with state-specific profile
+  const [rainfallMm, setRainfallMm] = useState(stateProfile.rainfallMm || 140);
+  const [terrainVulnerability, setTerrainVulnerability] = useState(stateProfile.terrainVulnerability || 'steep_gorge');
+  const [roadCondition, setRoadCondition] = useState(stateProfile.roadCondition || 'subsidence');
+  const [recentIncidentsCount, setRecentIncidentsCount] = useState(stateProfile.recentIncidentsCount || 2);
+  const [predictionTimestamp, setPredictionTimestamp] = useState(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+
+  // Automatically update parameters when state changes (if Auto-Sync is ON)
+  useEffect(() => {
+    const profile = STATE_PREDICTION_PROFILES[selectedState] || STATE_PREDICTION_PROFILES.all;
+    if (isAiAutoSync) {
+      setRainfallMm(profile.rainfallMm);
+      setTerrainVulnerability(profile.terrainVulnerability);
+      setRoadCondition(profile.roadCondition);
+      setRecentIncidentsCount(profile.recentIncidentsCount);
+      setActivePreset('state_live');
+    }
+    setPredictionTimestamp(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
+  }, [selectedState, isAiAutoSync]);
+
+  // Derived Risk Score & Category calculation based on parameters
+  const calculateRisk = () => {
+    let score = 20;
+    score += Math.min((rainfallMm || 50) * 0.28, 45);
+    if (terrainVulnerability === 'steep_gorge') score += 20;
+    else if (terrainVulnerability === 'tectonic_fault') score += 25;
+    else if (terrainVulnerability === 'hilly') score += 12;
+
+    if (roadCondition === 'severely_damaged') score += 25;
+    else if (roadCondition === 'subsidence') score += 18;
+    else if (roadCondition === 'minor_scour') score += 8;
+
+    score += Math.min((recentIncidentsCount || 0) * 8, 30);
+    return Math.min(Math.round(score), 99);
+  };
+
+  const riskScore = calculateRisk();
+  const disruptionProbability = Number((riskScore / 100).toFixed(2));
+  const riskCategory = riskScore >= 75 ? 'CRITICAL' : riskScore >= 45 ? 'HIGH' : 'LOW';
+
   // Real-world scenario presets from IMD, BRO, CWC, and disaster news
   const LIVE_SCENARIO_PRESETS = [
     {
