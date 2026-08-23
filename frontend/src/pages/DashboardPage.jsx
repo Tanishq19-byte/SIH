@@ -35,6 +35,7 @@ import { DataTable } from '../components/common/DataTable';
 import { MapView } from '../components/map/MapView';
 
 import { MOCK_ROUTES } from '../data/mockRoutes';
+import { STATE_DASHBOARD_DATA, NER_STATES } from '../data/mockRegions';
 import { evaluateRouteDecision } from '../services/routeDecisionEngine';
 import { useToast } from '../hooks/useToast';
 import { useApp } from '../context/AppContext';
@@ -42,54 +43,42 @@ import { useApp } from '../context/AppContext';
 export const DashboardPage = () => {
   const navigate = useNavigate();
   const { addToast } = useToast();
-  const { isEmergencyMode, setIsEmergencyMode, setIsNewIncidentModalOpen } = useApp();
+  const { isEmergencyMode, setIsEmergencyMode, setIsNewIncidentModalOpen, selectedState } = useApp();
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Selected Route for Route Intelligence Panel
-  const [selectedRoute, setSelectedRoute] = useState({
-    id: 'route-tawang',
-    name: 'Guwahati → Tawang',
-    distanceKm: 447,
-    normalTravelHours: '11h 42m',
-    currentRisk: 'Moderate',
-    weatherImpact: '+42 min',
-    terrainRisk: 'High',
-    roadDisruptionsCount: 2,
-    aiConfidencePct: 87,
-    status: 'warning'
-  });
+  // Active state data based on dropdown selection
+  const stateData = STATE_DASHBOARD_DATA[selectedState] || STATE_DASHBOARD_DATA.all;
+  const stateName = NER_STATES.find(s => s.id === selectedState)?.name || 'All NER States';
+
+  // Selected Route for Route Intelligence Panel (adapts when region changes)
+  const [selectedRoute, setSelectedRoute] = useState(stateData.route);
+
+  useEffect(() => {
+    if (stateData?.route) {
+      setSelectedRoute(stateData.route);
+    }
+  }, [selectedState]);
 
   // "Why This Route?" Risk Factors
   const riskFactors = [
-    { label: 'Rainfall Risk', value: 82, color: 'bg-[#DC2626]' },
-    { label: 'Historical Disruptions', value: 74, color: 'bg-[#D97706]' },
-    { label: 'Terrain Slope', value: 68, color: 'bg-[#EA580C]' },
-    { label: 'Road Surface Condition', value: 61, color: 'bg-[#0F766E]' },
-    { label: 'Traffic Congestion', value: 43, color: 'bg-[#2563EB]' }
+    { label: 'Rainfall Risk', value: stateData.route.status === 'critical' ? 92 : stateData.route.status === 'warning' ? 74 : 22, color: 'bg-[#DC2626]' },
+    { label: 'Historical Disruptions', value: stateData.route.status === 'critical' ? 88 : stateData.route.status === 'warning' ? 62 : 18, color: 'bg-[#D97706]' },
+    { label: 'Terrain Slope', value: stateData.route.terrainRisk === 'Very High' ? 84 : stateData.route.terrainRisk === 'High' ? 68 : 32, color: 'bg-[#EA580C]' },
+    { label: 'Road Surface Condition', value: stateData.route.status === 'critical' ? 78 : stateData.route.status === 'warning' ? 54 : 15, color: 'bg-[#0F766E]' },
+    { label: 'Traffic Congestion', value: stateData.route.status === 'critical' ? 64 : 35, color: 'bg-[#2563EB]' }
   ];
 
-  // "WHAT CHANGED?" Dynamic Intelligence Stream
-  const whatChangedItems = [
-    { type: 'up', title: '3 new road disruptions reported in East Jaintia Hills', text: 'Landslide activity triggered by monsoon surge', color: 'text-[#DC2626]' },
-    { type: 'up', title: 'Rainfall risk increased to 82% on NH-27', text: 'Continuous precipitation forecast for next 18 hours', color: 'text-[#D97706]' },
-    { type: 'down', title: '2 previously blocked routes reopened', text: 'NH-10 Siliguri-Gangtok line cleared by BRO 44 BRTF', color: 'text-[#16A34A]' },
-    { type: 'up', title: 'Route delay probability increased by 12%', text: 'Heavy convoy slowdowns near Sonapur portal', color: 'text-[#DC2626]' }
-  ];
+  // Dynamic Intelligence Stream
+  const whatChangedItems = stateData.whatChanged || STATE_DASHBOARD_DATA.all.whatChanged;
 
   // Disruption Vertical Timeline Events
-  const timelineEvents = [
-    { time: '08:42 IST', title: 'Heavy rainfall detected', detail: '140mm 24h intensity registered in Cachar sector', type: 'warning' },
-    { time: '09:10 IST', title: 'Route risk increased', detail: 'NH-27 vulnerability score escalated to 87/100', type: 'critical' },
-    { time: '09:26 IST', title: 'Landslide reported', detail: 'BRO field patrol confirmed 120m roadway blockage', type: 'critical' },
-    { time: '09:34 IST', title: 'AI recalculated routes', detail: 'Evaluated 3 alternate corridors via Haflong Ridge', type: 'info' },
-    { time: '09:41 IST', title: 'Alternative route recommended', detail: 'Route B preferred (-61% disruption exposure)', type: 'success' }
-  ];
+  const timelineEvents = stateData.timeline || STATE_DASHBOARD_DATA.all.timeline;
 
   // Priority Emergency Dispatch List
   const emergencyPriorities = [
-    { rank: 1, category: 'Critical', supply: 'Medicine & Oxygen', destination: 'Tawang Civil Hospital', route: 'Route B Paved Bypass', eta: '6h 15m' },
-    { rank: 2, category: 'High', supply: 'Ration Food Supplies', destination: 'Upper Siang Relief Hub', route: 'NH-29 Safe Corridor', eta: '8h 40m' },
-    { rank: 3, category: 'High', supply: 'Diesel & Fuel Tankers', destination: 'Changlang Power Station', route: 'NH-08 Alternate', eta: '9h 10m' }
+    { rank: 1, category: 'Critical', supply: 'Medicine & Oxygen', destination: `${stateName} Relief Center`, route: 'Priority Escort Corridor', eta: '4h 15m' },
+    { rank: 2, category: 'High', supply: 'Ration Food Supplies', destination: `${stateName} Civil Supplies`, route: 'Safe Trunk Corridor', eta: '6h 40m' },
+    { rank: 3, category: 'High', supply: 'Diesel & Fuel Tankers', destination: `${stateName} Power Station`, route: 'Standard Alternate', eta: '7h 10m' }
   ];
 
   const handleRefreshData = () => {
@@ -98,7 +87,7 @@ export const DashboardPage = () => {
       setIsRefreshing(false);
       addToast({
         title: 'Telemetry Synced',
-        message: 'Refreshed active GPS positions for 128 shipments across 47 corridors.',
+        message: `Refreshed telemetry for ${stateName} across monitored corridors.`,
         type: 'success'
       });
     }, 600);
@@ -109,9 +98,9 @@ export const DashboardPage = () => {
       {/* Overview Header */}
       <PageHeader
         category="NORTH EAST LOGISTICS & ROUTE INTELLIGENCE"
-        title="Good morning, Logistics Control"
-        subtitle="Regional logistics intelligence and operational overview for North East India."
-        badgeText="SYSTEM OPERATIONAL"
+        title={`Good morning, ${stateName} Logistics Control`}
+        subtitle={`Operational intelligence and active corridor health for ${stateName}.`}
+        badgeText={stateData.kpis.criticalAlerts.value !== '00' ? `${stateData.kpis.criticalAlerts.value} HAZARDS ACTIVE` : 'CORRIDORS NOMINAL'}
         actionButton={
           <div className="flex items-center gap-2">
             <Button
@@ -135,47 +124,47 @@ export const DashboardPage = () => {
         }
       />
 
-      {/* 4 KPI CARDS (Section 5 Requirement) */}
+      {/* 4 DYNAMIC KPI CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard
           title="ACTIVE ROUTES"
-          value="128"
+          value={stateData.kpis.activeRoutes.value}
           unit="Corridors"
-          change="Monitored"
-          changeType="neutral"
+          change={stateData.kpis.activeRoutes.change}
+          changeType={stateData.kpis.activeRoutes.changeType}
           icon={Compass}
           accentColor="teal"
-          subtitle="8 North East States"
+          subtitle={stateData.kpis.activeRoutes.subtitle}
         />
         <StatCard
           title="DELAYED ROUTES"
-          value="17"
+          value={stateData.kpis.delayedRoutes.value}
           unit="Corridors"
-          change="+3 vs yesterday"
-          changeType="negative"
+          change={stateData.kpis.delayedRoutes.change}
+          changeType={stateData.kpis.delayedRoutes.changeType}
           icon={AlertTriangle}
           accentColor="amber"
-          subtitle="Monsoon Impact"
+          subtitle={stateData.kpis.delayedRoutes.subtitle}
         />
         <StatCard
           title="CRITICAL ALERTS"
-          value="08"
+          value={stateData.kpis.criticalAlerts.value}
           unit="Active Hazards"
-          change="Sonapur & Tawang"
-          changeType="negative"
+          change={stateData.kpis.criticalAlerts.change}
+          changeType={stateData.kpis.criticalAlerts.changeType}
           icon={ShieldAlert}
           accentColor="red"
-          subtitle="Immediate Action Req."
+          subtitle={stateData.kpis.criticalAlerts.subtitle}
         />
         <StatCard
           title="NETWORK AVAILABILITY"
-          value="94%"
+          value={stateData.kpis.networkAvailability.value}
           unit="Accessibility"
-          change="+1.2% this week"
-          changeType="positive"
+          change={stateData.kpis.networkAvailability.change}
+          changeType={stateData.kpis.networkAvailability.changeType}
           icon={Activity}
           accentColor="green"
-          subtitle="Overall Resilience"
+          subtitle={stateData.kpis.networkAvailability.subtitle}
         />
       </div>
 
@@ -197,19 +186,19 @@ export const DashboardPage = () => {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs font-sans">
             <div className="p-3 bg-white rounded-xl border border-[#FECACA]">
               <span className="text-[10px] text-[#64748B] uppercase font-bold block">CRITICAL ROUTES</span>
-              <p className="text-xl font-extrabold text-[#DC2626] mt-0.5">12 Routes</p>
+              <p className="text-xl font-extrabold text-[#DC2626] mt-0.5">{stateData.emergencyMetrics.critical} Routes</p>
             </div>
             <div className="p-3 bg-white rounded-xl border border-[#FECACA]">
               <span className="text-[10px] text-[#64748B] uppercase font-bold block">MEDICAL SHIPMENTS</span>
-              <p className="text-xl font-extrabold text-[#0F766E] mt-0.5">07 Shipments</p>
+              <p className="text-xl font-extrabold text-[#0F766E] mt-0.5">{stateData.emergencyMetrics.medical} Shipments</p>
             </div>
             <div className="p-3 bg-white rounded-xl border border-[#FECACA]">
               <span className="text-[10px] text-[#64748B] uppercase font-bold block">FOOD SUPPLY ROUTES</span>
-              <p className="text-xl font-extrabold text-[#D97706] mt-0.5">04 Corridors</p>
+              <p className="text-xl font-extrabold text-[#D97706] mt-0.5">{stateData.emergencyMetrics.food} Corridors</p>
             </div>
             <div className="p-3 bg-white rounded-xl border border-[#FECACA]">
               <span className="text-[10px] text-[#64748B] uppercase font-bold block">ROADS CLOSED</span>
-              <p className="text-xl font-extrabold text-[#0F172A] mt-0.5">03 Passes</p>
+              <p className="text-xl font-extrabold text-[#0F172A] mt-0.5">{stateData.emergencyMetrics.closed} Passes</p>
             </div>
           </div>
 
