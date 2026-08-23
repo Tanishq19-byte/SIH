@@ -83,16 +83,34 @@ export const MapView = ({
         ))}
       </div>
 
-      {/* Interactive GIS Vector Canvas */}
-      <div className="relative flex-1 bg-[#F8FAFC] bg-topo-pattern overflow-hidden p-6 flex flex-col justify-between">
+      {/* Interactive GIS Vector Canvas with Dynamic Layer Styling */}
+      <div
+        className={`relative flex-1 overflow-hidden p-6 flex flex-col justify-between transition-colors duration-300 ${
+          activeTab === 'satellite'
+            ? 'bg-[#0B132B] text-slate-100'
+            : activeTab === 'terrain'
+            ? 'bg-[#F4F1EA] text-[#3E3827]'
+            : 'bg-[#F8FAFC] text-[#0F172A] bg-topo-pattern'
+        }`}
+      >
         {/* Top Information Banner inside Canvas */}
-        <div className="z-10 flex items-center justify-between text-xs font-sans text-[#64748B] mt-12 md:mt-0">
-          <span className="flex items-center gap-1.5 font-bold text-[#0F766E]">
-            <span className="w-2 h-2 rounded-full bg-[#0F766E] animate-pulse"></span>
-            Geospatial Viewport: <span className="text-[#0F172A]">{currentStateName}</span>
+        <div className="z-10 flex items-center justify-between text-xs font-sans mt-12 md:mt-0">
+          <span className={`flex items-center gap-1.5 font-bold ${
+            activeTab === 'satellite' ? 'text-[#38BDF8]' : activeTab === 'terrain' ? 'text-[#78350F]' : 'text-[#0F766E]'
+          }`}>
+            <span className={`w-2 h-2 rounded-full animate-pulse ${
+              activeTab === 'satellite' ? 'bg-[#38BDF8]' : activeTab === 'terrain' ? 'bg-[#D97706]' : 'bg-[#0F766E]'
+            }`}></span>
+            Geospatial Layer: <span className="font-extrabold uppercase tracking-wide">[{activeTab}]</span> • {currentStateName}
           </span>
-          <span className="hidden sm:inline font-mono text-[11px] text-[#64748B]">
-            GPS Feed: 25.5788° N, 93.2473° E • AI Multi-Corridor Analysis Active
+          <span className={`hidden sm:inline font-mono text-[11px] ${
+            activeTab === 'satellite' ? 'text-[#94A3B8]' : 'text-[#64748B]'
+          }`}>
+            {activeTab === 'terrain'
+              ? 'Elevation Model: SRTM 30m • Slope Vulnerability Overlay Active'
+              : activeTab === 'satellite'
+              ? 'Orbital Telemetry Feed: Sentinel-2 Multispectral • Real-time Cloud Cover'
+              : 'GPS Feed: 25.5788° N, 93.2473° E • EPSG:4326 GIS Grid'}
           </span>
         </div>
 
@@ -105,14 +123,41 @@ export const MapView = ({
                 <stop offset="100%" stopColor="#EA580C" stopOpacity="0.85" />
               </linearGradient>
               <linearGradient id="routeSafeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#0F766E" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#16A34A" stopOpacity="0.95" />
+                <stop offset="0%" stopColor={activeTab === 'satellite' ? '#06B6D4' : '#0F766E'} stopOpacity="0.9" />
+                <stop offset="100%" stopColor={activeTab === 'satellite' ? '#10B981' : '#16A34A'} stopOpacity="0.95" />
               </linearGradient>
               <linearGradient id="routeBypassGrad" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" stopColor="#10B981" stopOpacity="1" />
                 <stop offset="100%" stopColor="#059669" stopOpacity="0.9" />
               </linearGradient>
+              {/* Satellite Grid Pattern */}
+              <pattern id="satGrid" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(56, 189, 248, 0.08)" strokeWidth="1" />
+              </pattern>
             </defs>
+
+            {/* Satellite Grid Background */}
+            {activeTab === 'satellite' && (
+              <rect width="1000" height="600" fill="url(#satGrid)" />
+            )}
+
+            {/* TERRAIN ELEVATION CONTOUR RINGS */}
+            {activeTab === 'terrain' && (
+              <g opacity="0.35">
+                {/* Himalayas / Sela Ridge Contour */}
+                <ellipse cx="260" cy="90" rx="140" ry="70" fill="#E6DFD3" stroke="#B8A99A" strokeWidth="1.5" strokeDasharray="3 3" />
+                <ellipse cx="260" cy="90" rx="90" ry="45" fill="#D8CEBE" stroke="#A89786" strokeWidth="1.5" />
+                <text x="260" y="55" fill="#78350F" fontSize="9" fontWeight="bold" textAnchor="middle">Sela Ridge (4,170m)</text>
+
+                {/* Khasi & Jaintia Hills Contour */}
+                <ellipse cx="320" cy="230" rx="160" ry="80" fill="#E6DFD3" stroke="#B8A99A" strokeWidth="1.5" strokeDasharray="3 3" />
+                <ellipse cx="340" cy="245" rx="70" ry="35" fill="#D8CEBE" stroke="#A89786" strokeWidth="1.5" />
+                <text x="340" y="225" fill="#78350F" fontSize="9" fontWeight="bold" textAnchor="middle">East Jaintia Steep Gorge (Slope 42°)</text>
+
+                {/* Barail Range / Haflong Ridge */}
+                <ellipse cx="400" cy="300" rx="110" ry="50" fill="#E6DFD3" stroke="#B8A99A" strokeWidth="1.5" />
+              </g>
+            )}
 
             {/* HIGHWAY CORRIDOR PATHS */}
             {showRoutes && (
