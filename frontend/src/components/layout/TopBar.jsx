@@ -48,7 +48,7 @@ export const TopBar = ({ onToggleMobileMenu }) => {
 
   return (
     <header className="h-16 bg-white border-b border-[#E2E8F0] px-3 sm:px-4 md:px-6 flex items-center justify-between gap-2 sm:gap-3 sticky top-0 z-40 shadow-2xs">
-      {/* Mobile Menu Button + Search Input Trigger */}
+      {/* Global Search Input Trigger */}
       <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
         <button
           onClick={onToggleMobileMenu}
@@ -57,25 +57,24 @@ export const TopBar = ({ onToggleMobileMenu }) => {
           <Menu className="w-5 h-5" />
         </button>
 
-        {/* Global Search Input Trigger */}
         <button
           onClick={() => setIsSearchOpen(true)}
-          className="hidden sm:flex items-center gap-2.5 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-all w-48 md:w-60 lg:w-72 cursor-pointer"
+          className="hidden sm:flex items-center gap-2 bg-[#F8FAFC] hover:bg-[#F1F5F9] border border-[#E2E8F0] rounded-xl px-3 py-1.5 text-xs text-[#64748B] hover:text-[#0F172A] transition-all w-36 md:w-48 lg:w-56 cursor-pointer"
         >
           <Search className="w-3.5 h-3.5 text-[#0F766E] flex-shrink-0" />
-          <span className="flex-1 text-left font-sans truncate">Search routes, shipments...</span>
+          <span className="flex-1 text-left font-sans truncate">Search routes...</span>
           <kbd className="font-mono text-[9px] bg-white text-[#64748B] border border-[#CBD5E1] px-1.5 py-0.5 rounded shadow-2xs flex-shrink-0">
             Ctrl K
           </kbd>
         </button>
       </div>
 
-      {/* Center Operational Status & Emergency Mode Button */}
-      <div className="hidden md:flex items-center gap-2 flex-1 min-w-0 justify-center">
+      {/* Center Operational Status & Emergency Alert Button */}
+      <div className="hidden md:flex items-center gap-2 flex-shrink-0 justify-center">
         {/* Emergency Operations Toggle Button */}
         <button
           onClick={() => setIsEmergencyMode(!isEmergencyMode)}
-          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all border flex-shrink-0 cursor-pointer ${
+          className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl text-xs font-bold transition-all border flex-shrink-0 cursor-pointer ${
             isEmergencyMode
               ? 'bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5] shadow-xs'
               : 'bg-[#F8FAFC] text-[#0F172A] border-[#E2E8F0] hover:bg-[#F1F5F9]'
@@ -83,18 +82,18 @@ export const TopBar = ({ onToggleMobileMenu }) => {
           title="Toggle Emergency Command Directive Matrix"
         >
           <Zap className={`w-3.5 h-3.5 ${isEmergencyMode ? 'text-[#DC2626] animate-bounce' : 'text-[#D97706]'}`} />
-          <span className="truncate">{isEmergencyMode ? 'EMERGENCY MODE ACTIVE' : 'Emergency Ops'}</span>
+          <span className="whitespace-nowrap">{isEmergencyMode ? 'EMERGENCY ACTIVE' : 'Emergency Ops'}</span>
         </button>
 
         {activeEmergencyAlert.active && (
           <button
             onClick={() => setIsEmergencyModalOpen(true)}
-            className="flex items-center gap-1.5 bg-[#FEF2F2] hover:bg-[#FEE2E2] border border-[#FECACA] hover:border-[#FCA5A5] px-3 py-1.5 rounded-full text-xs text-[#991B1B] truncate font-medium transition-all shadow-2xs hover:shadow-xs group cursor-pointer max-w-xs xl:max-w-md min-w-0"
+            className="flex items-center gap-2 bg-[#FEF2F2] hover:bg-[#FEE2E2] border border-[#FECACA] hover:border-[#FCA5A5] px-3 py-1.5 rounded-full text-xs text-[#991B1B] font-medium transition-all shadow-2xs hover:shadow-xs group cursor-pointer flex-shrink-0"
             title="Click to inspect emergency details and trigger AI rerouting"
           >
             <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626] flex-shrink-0 group-hover:scale-110 transition-transform" />
-            <span className="truncate">{activeEmergencyAlert.message}</span>
-            <span className="text-[9px] font-bold bg-[#DC2626] text-white px-2 py-0.2 rounded-full ml-1 shrink-0">
+            <span className="hidden lg:inline font-bold whitespace-nowrap">Sonapur Landslide (NH-27)</span>
+            <span className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-[#DC2626] text-white px-2.5 py-0.5 rounded-full shadow-2xs whitespace-nowrap">
               INSPECT &rarr;
             </span>
           </button>
