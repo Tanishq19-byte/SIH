@@ -13,9 +13,9 @@ export const PageHeader = ({
   const { selectedState, setSelectedState } = useApp();
 
   return (
-    <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-[#E2E8F0] pb-4">
-      <div>
-        <div className="flex items-center gap-2 mb-1">
+    <div className="mb-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 border-b border-[#E2E8F0] pb-4">
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1 flex-wrap">
           <span className="text-[11px] font-sans tracking-widest text-[#0F766E] uppercase font-bold">
             {category}
           </span>
@@ -26,15 +26,15 @@ export const PageHeader = ({
             </span>
           )}
         </div>
-        <h1 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[#0F172A] font-sans">{title}</h1>
-        {subtitle && <p className="text-sm text-[#64748B] mt-1 max-w-3xl leading-relaxed font-sans">{subtitle}</p>}
+        <h1 className="text-xl md:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0F172A] font-sans truncate">{title}</h1>
+        {subtitle && <p className="text-xs md:text-sm text-[#64748B] mt-1 max-w-3xl leading-relaxed font-sans">{subtitle}</p>}
       </div>
 
-      <div className="flex items-center gap-3 flex-wrap">
+      <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap flex-shrink-0">
         {/* Region State Filter */}
-        <div className="flex items-center gap-2 bg-white border border-[#E2E8F0] rounded-xl px-3 py-1.5 shadow-2xs">
+        <div className="flex items-center gap-1.5 bg-white border border-[#E2E8F0] rounded-xl px-2.5 py-1.5 shadow-2xs">
           <Filter className="w-3.5 h-3.5 text-[#0F766E]" />
-          <span className="text-xs text-[#64748B] hidden sm:inline font-sans">Region:</span>
+          <span className="text-xs text-[#64748B] hidden sm:inline font-sans font-medium">Region:</span>
           <select
             value={selectedState}
             onChange={(e) => setSelectedState(e.target.value)}
