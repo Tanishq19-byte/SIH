@@ -1,0 +1,37 @@
+services:
+  # 1. Python FastAPI AI Prediction Microservice
+  - type: web
+    name: ner-smartroute-ai
+    env: python
+    rootDir: ai-service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: CORS_ORIGIN
+        value: "*"
+
+  # 2. Node.js Express API Gateway Backend
+  - type: web
+    name: ner-smartroute-backend
+    env: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: node src/server.js
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 5000
+      - key: NODE_ENV
+        value: production
+      - key: AI_SERVICE_URL
+        fromService:
+          type: web
+          name: ner-smartroute-ai
+          property: url
+      - key: CORS_ORIGIN
+        value: "*"
+      - key: JWT_SECRET
+        generateValue: true
