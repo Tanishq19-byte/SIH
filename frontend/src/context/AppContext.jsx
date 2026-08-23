@@ -7,6 +7,7 @@ export const AppProvider = ({ children }) => {
   const [isNotificationOpen, setIsNotificationOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNewIncidentModalOpen, setIsNewIncidentModalOpen] = useState(false);
+  const [isEmergencyModalOpen, setIsEmergencyModalOpen] = useState(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(4);
   const [isEmergencyMode, setIsEmergencyMode] = useState(true);
   const [activeEmergencyAlert, setActiveEmergencyAlert] = useState({
@@ -26,6 +27,8 @@ export const AppProvider = ({ children }) => {
         setIsSearchOpen,
         isNewIncidentModalOpen,
         setIsNewIncidentModalOpen,
+        isEmergencyModalOpen,
+        setIsEmergencyModalOpen,
         unreadNotificationsCount,
         setUnreadNotificationsCount,
         isEmergencyMode,

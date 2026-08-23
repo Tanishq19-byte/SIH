@@ -13,7 +13,8 @@ export const TopBar = ({ onToggleMobileMenu }) => {
     unreadNotificationsCount,
     activeEmergencyAlert,
     isEmergencyMode,
-    setIsEmergencyMode
+    setIsEmergencyMode,
+    setIsEmergencyModalOpen
   } = useApp();
 
   const [timeString, setTimeString] = useState('');
@@ -79,16 +80,24 @@ export const TopBar = ({ onToggleMobileMenu }) => {
               ? 'bg-[#FEE2E2] text-[#DC2626] border-[#FCA5A5] shadow-xs'
               : 'bg-[#F8FAFC] text-[#0F172A] border-[#E2E8F0] hover:bg-[#F1F5F9]'
           }`}
+          title="Toggle Emergency Command Directive Matrix"
         >
           <Zap className={`w-4 h-4 ${isEmergencyMode ? 'text-[#DC2626] animate-bounce' : 'text-[#D97706]'}`} />
           <span>{isEmergencyMode ? 'EMERGENCY MODE ACTIVE' : 'Emergency Operations'}</span>
         </button>
 
         {activeEmergencyAlert.active && (
-          <div className="flex items-center gap-2 bg-[#FEF2F2] border border-[#FECACA] px-3 py-1 rounded-full text-xs text-[#991B1B] max-w-xs truncate font-medium">
-            <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626] flex-shrink-0" />
+          <button
+            onClick={() => setIsEmergencyModalOpen(true)}
+            className="flex items-center gap-2 bg-[#FEF2F2] hover:bg-[#FEE2E2] border border-[#FECACA] hover:border-[#FCA5A5] px-3.5 py-1.5 rounded-full text-xs text-[#991B1B] max-w-sm truncate font-medium transition-all shadow-2xs hover:shadow-xs group cursor-pointer"
+            title="Click to inspect emergency details and trigger AI rerouting"
+          >
+            <AlertTriangle className="w-3.5 h-3.5 text-[#DC2626] flex-shrink-0 group-hover:scale-110 transition-transform" />
             <span className="truncate">{activeEmergencyAlert.message}</span>
-          </div>
+            <span className="text-[10px] font-bold bg-[#DC2626] text-white px-2 py-0.5 rounded-full ml-1 shrink-0">
+              INSPECT &rarr;
+            </span>
+          </button>
         )}
       </div>
 

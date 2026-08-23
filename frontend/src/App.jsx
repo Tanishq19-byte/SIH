@@ -8,6 +8,7 @@ import { Sidebar } from './components/layout/Sidebar';
 import { TopBar } from './components/layout/TopBar';
 import { NotificationCenter } from './components/layout/NotificationCenter';
 import { GlobalSearchModal } from './components/layout/GlobalSearchModal';
+import { EmergencyAlertModal } from './components/layout/EmergencyAlertModal';
 import { ToastContainer } from './components/common/ToastContainer';
 import { ErrorBoundary } from './components/common/ErrorBoundary';
 
@@ -45,6 +46,7 @@ const Layout = ({ children }) => {
       {/* Overlay Drawers & Modals */}
       <NotificationCenter />
       <GlobalSearchModal />
+      <EmergencyAlertModal />
       <ToastContainer />
     </div>
   );
