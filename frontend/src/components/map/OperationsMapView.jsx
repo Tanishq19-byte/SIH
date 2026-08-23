@@ -8,12 +8,16 @@ import {
   Building2,
   CheckCircle2,
   MapPin,
-  Maximize2
+  Maximize2,
+  Zap,
+  ShieldCheck
 } from 'lucide-react';
 import { MOCK_ROUTES } from '../../data/mockRoutes';
 import { MOCK_VEHICLES } from '../../data/mockVehicles';
 import { MOCK_INCIDENTS } from '../../data/mockIncidents';
 import { MOCK_SUPPLIES } from '../../data/mockSupplies';
+import { useApp } from '../../context/AppContext';
+import { NER_STATES } from '../../data/mockRegions';
 
 export const OperationsMapView = ({
   activeFilters,
@@ -24,7 +28,9 @@ export const OperationsMapView = ({
   onSelectRoad,
   onSelectIncident
 }) => {
+  const { selectedState } = useApp();
   const [mapStyle, setMapStyle] = useState('light');
+  const currentStateName = NER_STATES.find(s => s.id === selectedState)?.name || 'All NER States';
 
   const EXTRA_DEPOTS = [
     { id: 'DEP-1', name: 'Guwahati Oxygen Depot', type: 'Oxygen Plant', x: 220, y: 180 },
@@ -54,7 +60,7 @@ export const OperationsMapView = ({
         <div className="flex items-center gap-3">
           <span className="flex items-center gap-1.5 text-[#155EEF] font-bold">
             <span className="w-2.5 h-2.5 rounded-full bg-[#155EEF] animate-pulse"></span>
-            NER Live Geospatial Operations Engine
+            NER Geospatial Engine: <span className="text-[#0F172A] font-sans font-extrabold">{currentStateName}</span>
           </span>
           {commandMode && (
             <span className="px-2 py-0.5 bg-[#FFEBEB] text-[#E5484D] font-bold rounded border border-[#FCA5A5] text-[10px]">
@@ -66,7 +72,7 @@ export const OperationsMapView = ({
         <div className="hidden sm:flex items-center gap-4 text-[#667085] text-[11px]">
           <span>Zoom: 8.5x</span>
           <span>Center: 25.5788° N, 93.2473° E</span>
-          <span>EPSG:4326</span>
+          <span className="text-[#059669] font-bold">AI Rerouting Engine Active</span>
         </div>
       </div>
 
@@ -81,6 +87,10 @@ export const OperationsMapView = ({
             <linearGradient id="opOperational" x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#155EEF" stopOpacity="0.9" />
               <stop offset="100%" stopColor="#0F9D8A" stopOpacity="0.9" />
+            </linearGradient>
+            <linearGradient id="opBypass" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#10B981" stopOpacity="1" />
+              <stop offset="100%" stopColor="#059669" stopOpacity="0.9" />
             </linearGradient>
           </defs>
 
@@ -106,18 +116,18 @@ export const OperationsMapView = ({
                 d="M 220,180 Q 320,220 440,310"
                 fill="none"
                 stroke="url(#opBlocked)"
-                strokeWidth={selectedRoad?.id === 'NH-27' ? '6' : '4'}
+                strokeWidth={selectedRoad?.id === 'NH-27' ? '6' : '4.5'}
                 strokeDasharray="8 4"
                 className="animate-pulse cursor-pointer"
                 onClick={() => onSelectRoad && onSelectRoad(MOCK_ROUTES[0])}
               />
-              {/* Haflong Bypass Alternate Route */}
+              {/* Haflong Bypass Alternate Route (Glowing Green) */}
               <path
-                d="M 220,180 Q 350,280 440,310"
+                d="M 220,180 Q 360,290 440,310"
                 fill="none"
-                stroke="#0F9D8A"
-                strokeWidth="3.5"
-                strokeDasharray="4 2"
+                stroke="url(#opBypass)"
+                strokeWidth="4"
+                strokeDasharray="5 2.5"
                 className="cursor-pointer"
               />
               {/* NH-10 Siliguri - Gangtok */}
@@ -125,9 +135,9 @@ export const OperationsMapView = ({
               {/* NH-29 Dimapur - Kohima - Imphal */}
               <path d="M 520,240 L 600,290 L 640,380" fill="none" stroke="url(#opOperational)" strokeWidth="3.5" />
               {/* NH-08 Guwahati - Agartala */}
-              <path d="M 220,180 L 290,260 L 320,440" fill="none" stroke="#F59E0B" strokeWidth="3" />
+              <path d="M 220,180 L 290,260 L 320,440" fill="none" stroke="#0F9D8A" strokeWidth="3" />
               {/* NH-54 Silchar - Aizawl */}
-              <path d="M 440,310 L 450,470" fill="none" stroke="#E5484D" strokeWidth="4" strokeDasharray="6 3" />
+              <path d="M 440,310 L 450,470" fill="none" stroke="#16A34A" strokeWidth="3.5" />
             </g>
           )}
 
