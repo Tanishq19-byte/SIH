@@ -32,7 +32,7 @@ export const ProfileMenu = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white border border-[#E2E8F0] rounded-2xl shadow-2xl overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-150 font-sans text-xs">
+        <div className="absolute right-0 mt-2 w-64 bg-white border border-[#E2E8F0] rounded-2xl shadow-2xl overflow-hidden z-[9999] font-sans text-xs" style={{right: 0, minWidth: '260px', maxWidth: '94vw'}}>
           <div className="p-3.5 border-b border-[#E2E8F0] bg-[#F8FAFC]">
             <p className="text-xs font-extrabold text-[#0F172A]">Dr. R. K. Sharma</p>
             <p className="text-[11px] text-[#64748B] font-medium">Chief Logistics Officer</p>
