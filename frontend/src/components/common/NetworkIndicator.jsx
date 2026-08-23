@@ -30,23 +30,23 @@ export const NetworkIndicator = () => {
       {/* Network Status Badge Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-mono font-bold transition-all shadow-sm ${
+        className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border text-xs font-sans font-extrabold transition-all shadow-2xs cursor-pointer ${
           isOnline
-            ? 'bg-emerald-950/40 text-emerald-400 border-emerald-500/40 hover:border-emerald-400'
-            : 'bg-amber-950/60 text-amber-300 border-amber-500/50 shadow-glow-amber animate-pulse'
+            ? 'bg-[#ECFDF5] text-[#059669] border-[#A7F3D0] hover:bg-[#D1FAE5]'
+            : 'bg-[#FEF2F2] text-[#DC2626] border-[#FECACA] animate-pulse'
         }`}
         title="Network Connection & Auto-Sync Status"
       >
         {isOnline ? (
           <>
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            <Wifi className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse"></span>
+            <Wifi className="w-3.5 h-3.5 text-[#059669]" />
             <span className="hidden sm:inline">Online</span>
           </>
         ) : (
           <>
-            <span className="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-            <WifiOff className="w-3.5 h-3.5 text-amber-400" />
+            <span className="w-2 h-2 rounded-full bg-[#DC2626] animate-ping"></span>
+            <WifiOff className="w-3.5 h-3.5 text-[#DC2626]" />
             <span>
               Offline {pendingSyncQueue.length > 0 ? `— ${pendingSyncQueue.length} pending sync` : ''}
             </span>
