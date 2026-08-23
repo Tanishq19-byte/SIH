@@ -118,6 +118,11 @@ const STATE_PREDICTION_PROFILES = {
   }
 };
 
+export const PredictionsPage = () => {
+  const { selectedState } = useApp();
+  const stateName = NER_STATES.find(s => s.id === selectedState)?.name || 'All NER States';
+  const stateProfile = STATE_PREDICTION_PROFILES[selectedState] || STATE_PREDICTION_PROFILES.all;
+
   const [isAiAutoSync, setIsAiAutoSync] = useState(true);
   const [activePreset, setActivePreset] = useState('state_live');
 
