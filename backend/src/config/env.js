@@ -8,6 +8,15 @@ const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http:/
   .split(',')
   .map(url => url.trim());
 
+// Normalize AI Service URL (handles raw host string from Render Blueprint property: host)
+let rawAiUrl = process.env.AI_SERVICE_URL || 'http://localhost:8000';
+rawAiUrl = rawAiUrl.trim();
+const aiServiceUrl = (rawAiUrl.startsWith('http://') || rawAiUrl.startsWith('https://'))
+  ? rawAiUrl
+  : rawAiUrl.includes(':')
+  ? `http://${rawAiUrl}`
+  : `http://${rawAiUrl}:10000`;
+
 export const config = {
   port: process.env.PORT || 5000,
   env: process.env.NODE_ENV || 'development',
@@ -15,7 +24,7 @@ export const config = {
   supabaseKey: process.env.SUPABASE_KEY || (isProduction ? '' : 'mock-supabase-service-key-secret'),
   jwtSecret: process.env.JWT_SECRET || (isProduction ? '' : 'ner-smartroute-jwt-secret-key-2026'),
   corsOrigins: allowedOrigins,
-  aiServiceUrl: process.env.AI_SERVICE_URL || 'http://localhost:8000'
+  aiServiceUrl
 };
 
 if (isProduction) {

@@ -30,7 +30,7 @@ services:
         fromService:
           type: web
           name: ner-smartroute-ai
-          property: url
+          property: host
       - key: CORS_ORIGIN
         value: "*"
       - key: JWT_SECRET
