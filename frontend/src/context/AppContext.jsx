@@ -8,6 +8,7 @@ export const AppProvider = ({ children }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isNewIncidentModalOpen, setIsNewIncidentModalOpen] = useState(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState(4);
+  const [isEmergencyMode, setIsEmergencyMode] = useState(true);
   const [activeEmergencyAlert, setActiveEmergencyAlert] = useState({
     active: true,
     message: 'CRITICAL: Sonapur Tunnel Landslide (NH-27) - 38 Oxygen & POL Tankers Stranded. AI Bypass Recommendation Active.',
@@ -27,6 +28,8 @@ export const AppProvider = ({ children }) => {
         setIsNewIncidentModalOpen,
         unreadNotificationsCount,
         setUnreadNotificationsCount,
+        isEmergencyMode,
+        setIsEmergencyMode,
         activeEmergencyAlert,
         setActiveEmergencyAlert
       }}
